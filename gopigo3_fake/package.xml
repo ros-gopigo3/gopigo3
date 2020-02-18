@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gopigo3_fake</name>
+  <version>1.2.0</version>
+  <description>
+    Package for GoPiGo3 fake node to perform simple tests can be done without a robot using RViz
+  </description>
+  <license>Apache 2.0</license>
+  <author email="brjapon@therobotacademy.com">Bernardo Ronquillo Japon</author>
+  <maintainer email="brjapon@therobotacademy.com">Bernardo Ronquillo Japon</maintainer>
+  <url type="website">http://wiki.ros.org/gopigo3</url>
+  <url type="repository">https://github.com/ros-gopigo3/gopigo3</url>
+  <url type="bugtracker">https://github.com/ros-gopigo3/gopigo3/issues</url>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf</depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+</package>

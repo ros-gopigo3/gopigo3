@@ -1,0 +1,16 @@
+<launch>
+  <arg name="model" default="gopigo3" />
+
+  <include file="$(find gopigo3_bringup)/launch/includes/description.launch.xml">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
+  <node pkg="gopigo3_fake" type="gopigo3_fake_node" name="gopigo3_fake_node" output="screen" />
+
+  <!-- Combine joint values to TF-->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" type="double" value="50.0" />
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find gopigo3_fake)/rviz/gopigo3_fake.rviz"/>
+</launch>

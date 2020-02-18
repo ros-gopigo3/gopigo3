@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gopigo3_bringup</name>
+  <version>1.0.0</version>
+  <description>
+    ROS packages for GoPiGo3 (meta package)
+  </description>
+  <license>Apache 2.0</license>
+  <author email="brjapon@therobotacademy.com">Bernardo Ronquillo Japon</author>
+  <maintainer email="brjapon@therobotacademy.com">Bernardo Ronquillo Japon</maintainer>
+  <url type="website">http://wiki.ros.org/gopigo3</url>
+  <url type="repository">https://github.com/ros-gopigo3/gopigo3</url>
+  <url type="bugtracker">https://github.com/ros-gopigo3/gopigo3/issues</url>
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>bringup_car</exec_depend>
+  <!--exec_depend>bringup_raspicam</exec_depend-->
+  <!--exec_depend>bringup_ydlidar</exec_depend-->
+</package>
