@@ -28,7 +28,7 @@ The package `gopigo3_bringup` allows the user to operate the robot including the
 
 BRINGUP GOPIGO3
 
-   - `$ roslaunch gopigo3_bringup starter_kit.launch` for Starter Kit configuration: servomotors of the wheels + distance sensor
+   - `$ roslaunch bringup_car starter_kit.launch` for Starter Kit configuration: servomotors of the wheels + distance sensor
 
 TEST INDIVIDUALLY for each of the involved hardware
 
