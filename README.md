@@ -1,3 +1,8 @@
+Follow the tutorial at [Learning Robotics with ROS made easy](https://medium.com/@brjapon/learning-robotics-with-ros-made-easy-304bde0a9dfc), where each of the ROS packages is covering in a dedicated section:
+1. **Robot model**    => gopigo3_description
+2. **Fake robot**     => gopigo3_fake
+3. **Physical robot** => gopigo3_bringup
+
 # Installation
 
 Follow the complete guide at [Learning Robotics with ROS made easy](https://medium.com/@brjapon/learning-robotics-with-ros-made-easy-304bde0a9dfc).
