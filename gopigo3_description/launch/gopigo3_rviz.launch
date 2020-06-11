@@ -1,16 +1,20 @@
 <launch>
   <!-- values passed by command line input -->     
   <arg name="model" default="gopigo3" />
-  <arg name="gui" default="False" />
+  <arg name="gui" default="false" />
 
   <!-- Robot URDF definition -->
-  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find gopigo3_description)/urdf/$(arg model).urdf.xacro'" />
-  <param name="robot_description" command="$(arg urdf_file)" />
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find gopigo3_description)/urdf/$(arg model).urdf.xacro'"/>
+  <param name="robot_description" command="$(arg urdf_file) 
+                distance:=true
+                pi_camera:=true
+                lds:=true
+                imu:=true "/>
 
   <!-- Start 3 nodes: rviz, joint_state_publisher and robot_state_publisher -->
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find gopigo3_description)/rviz/model_conf.rviz" required="true" />
   <!-- (required = "true") if rviz dies, entire roslaunch will be killed -->
-
+  
   <!-- Send joint values -->
   <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
     <param name="/use_gui" value="$(arg gui)"/>

@@ -42,9 +42,9 @@ Turtlebot3Fake::~Turtlebot3Fake()
 bool Turtlebot3Fake::init()
 {
 // Initialize robot geometry and ROS parameters
-  wheel_seperation_ = 0.160;
-  turning_radius_   = 0.080;
-  robot_radius_     = 0.105;
+  wheel_seperation_ = 0.116;
+  turning_radius_   = 0.058;
+  robot_radius_     = 0.210;
 
   nh_.param("wheel_left_joint_name", joint_states_name_[LEFT],  std::string("wheel_left_joint"));
   nh_.param("wheel_right_joint_name", joint_states_name_[RIGHT],  std::string("wheel_right_joint"));

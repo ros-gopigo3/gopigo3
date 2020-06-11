@@ -1,139 +1,152 @@
 <?xml version="1.0" ?>
-<robot name="gopigo3_sim" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="gopigo3" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find gopigo3_description)/urdf/common_properties.xacro"/>
   <xacro:include filename="$(find gopigo3_description)/urdf/gopigo3.gazebo.xacro"/>
 
-<!-- Base Footprint Link (base_footprint) -->
+  <xacro:property name="CADscale" value="0.0012" />
+
+  <!-- Which sensors to include -->
+<xacro:arg name="imu" default="false" />
+<!--xacro:property name="imu" value="true"/-->
+<xacro:arg name="distance"        default="true"/>
+<xacro:arg name="pi_camera"       default="true"/>
+<xacro:arg name="lds"             default="true"/>
+
+<!-- ============ 'base_footprint' is the ground link ===================== -->
   <link name="base_footprint"/>
-<!-- JOINT base_link to base_footprint-->
+
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
-    <!--origin xyz="0.0 0.0 0.010" rpy="0 0 0"/-->
-    <origin xyz="0 0 0.0875" rpy="0 0 0"/>
+    <!-- base_link is placed at the center of gravity of GoPiGo3 body -->
+    <origin xyz="0 0 0.075" rpy="0 0 0"/>
   </joint>
 
-<!-- Base Link (base_link) -->
+<!-- ============ 'base_link' simulates GoPiGo3 body mass and moment of inertia
+                   and act as the robot reference frame =================== -->
   <link name="base_link">
-    <visual>
-      <!--origin xyz="-0.032 0 0.0" rpy="0 0 0"/-->
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <!--mesh filename="package://turtlebot3_description/meshes/bases/burger_base.stl" scale="0.001 0.001 0.001"/-->
-        <box size="0.25 0.25 0.125"/>
-      </geometry>
-      <material name="light_black"/>
-    </visual>
-
+  <!-- **** 'base_link' COLLISION & INERTIA **** -->
     <collision>
       <origin xyz="-0.032 0 0.070" rpy="0 0 0"/>
       <geometry>
-        <!--box size="0.140 0.140 0.143"/-->
-        <box size="0.25 0.25 0.125"/>
+        <box size="0.21 0.105 0.11"/>
       </geometry>
     </collision>
 
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="8.2573504e-01"/>
-      <inertia ixx="2.2124416e-03" ixy="-1.2294101e-05" ixz="3.4938785e-05"
-               iyy="2.1193702e-03" iyz="-5.0120904e-06"
-               izz="2.0064271e-03" />
+      <mass value="0.534"/>
+      <inertia ixx="1.03e-03" ixy="-1.54e-03" ixz="-2.94e-03"
+               iyy="2.50e-03" iyz="-3.08e-03"
+               izz="2.45e-03" />
     </inertial>
   </link>
-<!-- JOINT wheel_left_link to base_link -->
+
+<!-- ============  'base_link_cad' is the solid model of robot body ====== -->
+  <joint name="base_joint_cad" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link_cad"/>
+    <!-- CAD of body of GoPiGo3 has its reference coordinate system at the center of the wheels shaft -->
+    <origin xyz="0 0 0.033" rpy="0 0 -4.71"/>
+  </joint>
+
+  <link name="base_link_cad">
+    <visual>
+      <!-- Decentering of the CAD model coordinate system-->
+      <origin xyz="0.024 0.097 -0.038" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://gopigo3_description/meshes/GoPiGo3_Body.stl" scale="${CADscale} ${CADscale} ${CADscale}"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+<!-- ============ wheel_left ====================== -->
   <joint name="wheel_left_joint" type="continuous">
     <parent link="base_link"/>
     <child link="wheel_left_link"/>
-    <!--origin xyz="0.0 0.08 0.023" rpy="-1.57 0 0"/>
-    <axis xyz="0 0 1"/-->
-    <origin xyz="0.1 0.15 0.0125" rpy="0 0 0" /> 
-    <axis xyz="0 1 0"/>
+    <!-- Ty is half the shaft lenght -->
+    <!-- Tz = -(0.075 base_link cdg -0.033 wheel radius) = -0.042 -->
+    <origin xyz="0 0.058 -0.042" rpy="0 0 1.57"/>
+    <axis xyz="-1 0 0"/>
   </joint>
-<!-- Left Wheel link (wheel_left_link) -->
+
   <link name="wheel_left_link">
     <visual>
-      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <!-- Decentering of wheel CAD model coordinate system-->
+      <origin xyz="-0.195 -0.173 -0.029" rpy="0 0 0"/>
       <geometry>
-        <!--mesh filename="package://turtlebot3_description/meshes/wheels/left_tire.stl" scale="0.001 0.001 0.001"/-->
-        <cylinder length="0.05" radius="0.1" />
+        <mesh filename="package://gopigo3_description/meshes/GoPiGo3_Wheel.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="dark"/>
+      <material name="black"/>
     </visual>
 
+  <!-- **** 'wheel_left' COLLISION & INERTIA **** -->
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <!--cylinder length="0.018" radius="0.033"/-->
-        <cylinder length="0.05" radius="0.1" />
+        <cylinder length="0.026" radius="0.033"/>
       </geometry>
     </collision>
 
     <inertial>
       <origin xyz="0 0 0" />
-      <mass value="2.8498940e-02" />
-      <inertia ixx="1.1175580e-05" ixy="-4.2369783e-11" ixz="-5.9381719e-09"
-               iyy="1.1192413e-05" iyz="-1.4400107e-11"
-               izz="2.0712558e-05" />
-      </inertial>
+      <mass value="0.032" />
+      <inertia ixx="1.74e-05" ixy="0" ixz="0"
+               iyy="1.05e-05" iyz="0"
+               izz="1.05e-05" />
+    </inertial>
   </link>
-<!-- JOINT wheel_right_link to base_link -->
+
+<!-- ============ wheel_right ====================== -->
   <joint name="wheel_right_joint" type="continuous">
     <parent link="base_link"/>
     <child link="wheel_right_link"/>
-    <!--origin xyz="0.0 -0.080 0.023" rpy="-1.57 0 0"/>
-    <axis xyz="0 0 1"/-->
-    <origin xyz="0.1 -0.15 0.0125" rpy="0 0 0" /> 
-    <axis xyz="0 1 0" />
+    <origin xyz="0 -0.058 -0.042" rpy="0 0 -1.57"/>
+    <!--axis xyz="0 0 1"/-->
+    <axis xyz="1 0 0"/>
   </joint>
-<!-- Right Wheel -->
+
   <link name="wheel_right_link">
     <visual>
-      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <!-- Decentering of wheel CAD model coordinate system-->
+      <origin xyz="-0.195 -0.173 -0.029" rpy="0 0 0"/>
       <geometry>
-        <!--mesh filename="package://turtlebot3_description/meshes/wheels/right_tire.stl" scale="0.001 0.001 0.001"/-->
-        <cylinder length="0.05" radius="0.1" />
+        <mesh filename="package://gopigo3_description/meshes/GoPiGo3_Wheel.stl" scale="0.001 0.001 0.001"/>
       </geometry>
-      <material name="dark"/>
+      <material name="black"/>
     </visual>
 
+  <!-- **** 'wheel_right' COLLISION & INERTIA **** -->
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <!--cylinder length="0.018" radius="0.033"/-->
-        <cylinder length="0.05" radius="0.1" />
+        <cylinder length="0.026" radius="0.033"/>
       </geometry>
     </collision>
 
     <inertial>
       <origin xyz="0 0 0" />
-      <mass value="2.8498940e-02" />
-      <inertia ixx="1.1175580e-05" ixy="-4.2369783e-11" ixz="-5.9381719e-09"
-               iyy="1.1192413e-05" iyz="-1.4400107e-11"
-               izz="2.0712558e-05" />
-      </inertial>
+      <mass value="0.032" />
+      <inertia ixx="1.74e-05" ixy="0" ixz="0"
+               iyy="1.05e-05" iyz="0"
+               izz="1.05e-05" />
+    </inertial>
   </link>
-<!-- JOINT caster_back_link to base_link-->
+
+<!-- ============ caster_back ====================== -->
   <joint name="caster_back_joint" type="fixed">
     <parent link="base_link"/>
     <child link="caster_back_link"/>
-    <!--origin xyz="-0.081 0 -0.004" rpy="-1.57 0 0"/-->
-    <origin xyz="-0.1 0 -0.0625" rpy="0 0 0" />
+    <origin xyz="-0.115 0 -0.075" rpy="0 0 0"/>
   </joint>
-<!-- Caster link (caster_back_link)-->
+
   <link name="caster_back_link">
-    <visual name="caster_visual">
-      <origin xyz="0 0.001 0" rpy="0 0 0"/>
-      <geometry>
-        <sphere radius="0.025" />
-      </geometry>
-    </visual>
-    
+  <!-- **** COLLISION & INERTIA **** -->
     <collision>
       <origin xyz="0 0.001 0" rpy="0 0 0"/>
       <geometry>
-        <!--box size="0.030 0.009 0.020"/-->
-        <sphere radius="0.025" />
+        <box size="0.030 0.009 0.020"/>
       </geometry>
     </collision>
 
@@ -146,110 +159,148 @@
     </inertial>
   </link>
 
-<!-- JOINT  imu_link to base_link -->
-  <joint name="imu_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="imu_link"/>
-    <origin xyz="-0.032 0 0.068" rpy="0 0 0"/>
-  </joint>
+<!-- ============ imu_link xacro:macro ========================= -->
+  <xacro:macro name="imu_sensor">
+    <joint name="imu_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="imu_link"/>
+      <origin xyz="0.08 -0.06 -0.01" rpy="0 0 0"/>
+    </joint>
 
-<!-- IMU Link (imu_link) -->
-  <link name="imu_link"/>
-<!-- JOINT base_scan to base_link -->
-  <joint name="scan_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="base_scan"/>
-    <!--origin xyz="-0.032 0 0.172" rpy="0 0 0"/-->
-    <origin xyz="0.01 0.05 0.125" rpy="0 0 -1.6"/>
-  </joint>
-<!-- Laser Distance Sensor (base_scan) -->
-  <link name="base_scan">
-    <visual>
-      <origin xyz="0 0 0.0" rpy="0 0 0"/>
-      <geometry>
-        <!--mesh filename="package://turtlebot3_description/meshes/sensors/lds.stl" scale="0.001 0.001 0.001"/-->
-        <mesh filename="package://gopigo3_description/meshes/X4.stl" scale="0.0015 0.0015 0.0015"/> 
-      </geometry>
-      <material name="dark"/>
-    </visual>
+    <link name="imu_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.003 0.010 0.015"/>
+        </geometry>
+        <material name="cyan"/>
+      </visual>
+    </link>
+  </xacro:macro>
+<!-- ============ imu_link xacro:if ========================= -->
+  <!-- if using a property (just inside this URDF file)-->
+  <!--xacro:if value="${imu == 'true'}"-->
+  <!--xacro:if value="${imu}"-->
 
-    <collision>
-      <!--origin xyz="0.015 0 -0.0065" rpy="0 0 0"/-->
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <!--cylinder length="0.0315" radius="0.055"/-->
-        <cylinder length="0.01575" radius="0.0275"/>
-      </geometry>
-    </collision>
+  <!-- if using an argument (call from outside)-->
+  <xacro:if value="$(arg imu)">
+    <xacro:imu_sensor/>
+  </xacro:if>
 
-    <inertial>
-      <mass value="0.114" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
-               iyy="0.001" iyz="0.0"
-               izz="0.001" />
-    </inertial>
-  </link>
-<!-- JOINT camera to base_link -->
-  <joint name="joint_camera" type="fixed">
-    <axis xyz="0 0 1" />
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <parent link="base_link"/>
-    <child link="camera"/>
-  </joint>
-<!-- 2D Camera (camera) -->
-  <link name="camera">
-    <visual>
-      <origin xyz="0.125 0 0.025" rpy="0 1.570795 0" />
-      <geometry>
-          <mesh filename="package://gopigo3_description/meshes/piCamera.stl" scale="0.0025 0.0025 0.0025"/>
-      </geometry>
-      <material name="yellow"/>
-    </visual>
+<!-- ============ Distance sensor ====================== -->
+  <xacro:macro name="distance_sensor">
+  <!-- JOINT distance_sensor to base_link -->
+    <joint name="distance_sensor_joint" type="fixed">
+      <axis xyz="0 1 0" />
+      <origin xyz="0.085 0 0.025" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="distance_sensor"/>
+    </joint>
     
-    <collision>
-      <origin xyz="0.1375 0 0.025" rpy="0 -1.570795 0" />
-      <geometry>
-        <box size="0.075 0.075 0.025"/>
-      </geometry>
-    </collision>
+  <!-- Distance Sensor -->
+    <link name="distance_sensor">
+      <visual>
+        <origin xyz="0 0 0" rpy="1.57 0 1.57"/>
+        <geometry>
+          <mesh filename="package://gopigo3_description/meshes/sensors/IR_Sensor_Sharp_GP2Y_solid.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="red"/>
+      </visual>
+    </link>
+  </xacro:macro>
+  
+  <xacro:if value="$(arg distance)">
+    <xacro:distance_sensor/>
+  </xacro:if>
 
-    <inertial>
-      <origin xyz="0.1375 0 0.025" rpy="0 -1.570795 0" />
-      <mass value="1e-3" />
-      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
-    </inertial>
-  </link>
-<!-- JOINT distance_sensor to base_link -->
-  <joint name="distance_sensor_joint" type="fixed">
-    <axis xyz="0 1 0" />
-    <origin rpy="0 0 0" xyz="0 0 0" />
-    <parent link="base_link"/>
-    <child link="distance_sensor"/>
-  </joint>
-<!-- Distance Sensor -->
-  <link name="distance_sensor">
-    <visual>
-      <origin xyz="0.1 0 0.0755" rpy="1.570795 0 1.570795" />
-      <geometry>
-        <mesh filename="package://gopigo3_description/meshes/IR_Sensor_Sharp_GP2Y_solid.stl" scale="0.0025 0.0025 0.0025"/>
-      </geometry>
-      <material name="red"/>
-    </visual>
+<!-- ============ base_scan ======================== -->
+  <xacro:macro name="lds_sensor">
+    <joint name="scan_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="base_scan"/>
+      <origin xyz="-0.02 0 0.105" rpy="0 0 -1.6"/>
+      <!--LDS** origin xyz="-0.02 0 0.07" rpy="0 0 -1.6"/-->
+    </joint>
 
-    <collision>
-      <origin xyz="0.1 0 0.0775" rpy="1.570795 0 1.570795" />
-      <geometry>
-        <box size="0.005 0.005 0.005"/>
-      </geometry>
-    </collision>
+    <link name="base_scan">
+      <visual>
+        <origin xyz="0 0 0.0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://gopigo3_description/meshes/sensors/X4.stl" scale="0.001 0.001 0.001"/>
+          <!--LDS** mesh filename="package://gopigo3_description/meshes/sensors/lds.stl" scale="0.001 0.001 0.001"/-->
+        </geometry>
+        <material name="orange"/>
+      </visual>
 
-    <inertial>
-      <origin xyz="0.1 0 0.0755" rpy="1.570795 0 1.570795" />
-      <mass value="1e-5" />
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
-    </inertial>
-  </link>
+  <!-- **** base_scan COLLISION & INERTIA **** -->
+      <collision>
+        <origin xyz="0.015 0 -0.0065" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.05" radius="0.035"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="0.178" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="1.10e-04" ixy="-1.56e-04" ixz="-3.12e-04"
+                 iyy="1.85e-04" iyz="-2.23e-04"
+                 izz="2.21e-04" />
+      </inertial>
+    </link>
+  </xacro:macro>
+  
+  <xacro:if value="$(arg lds)">
+    <xacro:lds_sensor/>
+  </xacro:if>
+
+<!-- ============ Pi Camera ====================== -->
+  <xacro:macro name="pi_camera_sensor">
+  <!-- (LINKS) Pi Camera -->
+    <link name="camera_link">
+      <visual>
+        <origin xyz="0.005 0.000 0.013" rpy="0 1.570795 0" />
+        <geometry>
+            <mesh filename="package://gopigo3_description/meshes/sensors/piCamera.stl" scale="0.00125 0.00125 0.00125"/>
+        </geometry>
+        <material name="yellow"/>
+      </visual>
+
+    <!-- **** Pi Camera COLLISION & INERTIA **** -->
+      <collision>
+        <origin xyz="0.005 0.011 0.013" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.015 0.030 0.027"/>
+        </geometry>
+      </collision>
+      </link>
+
+    <link name="camera_rgb_frame"/>
+    
+    <link name="camera_rgb_optical_frame"/>
+
+  <!-- (JOINTS) Pi Camera -->
+    <joint name="camera_joint" type="fixed">
+      <origin xyz="0.06 0 0.04" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="camera_link"/>
+    </joint>
+
+    <joint name="camera_rgb_joint" type="fixed">
+      <origin xyz="0.003 0.000 0.009" rpy="0 0 0"/>
+      <parent link="camera_link"/>
+      <child link="camera_rgb_frame"/>
+    </joint>
+
+    <joint name="camera_rgb_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="-1.57 0 -1.57"/>
+      <parent link="camera_rgb_frame"/>
+      <child link="camera_rgb_optical_frame"/>
+    </joint> 
+  </xacro:macro>
+
+  <xacro:if value="$(arg pi_camera)">
+    <xacro:pi_camera_sensor/>
+  </xacro:if>
 
 </robot>

@@ -1,0 +1,15 @@
+<!DOCTYPE MeshLabDocument>
+<MeshLabProject>
+ <MeshGroup>
+  <MLMesh label="GoPiGo3_Wheel_decentered.stl" filename="GoPiGo3_Wheel_decentered.stl" visible="1">
+   <MLMatrix44>
+1 0 0 -195.279 
+0 1 0 -173.447 
+0 0 1 -28.5114 
+0 0 0 1 
+</MLMatrix44>
+   <RenderingOption wireWidth="1" pointSize="3" pointColor="131 149 69 255" solidColor="192 192 192 255" boxColor="234 234 234 255" wireColor="64 64 64 255">010111000000000000000110000001000000001011100000010100111011110000001001</RenderingOption>
+  </MLMesh>
+ </MeshGroup>
+ <RasterGroup/>
+</MeshLabProject>
