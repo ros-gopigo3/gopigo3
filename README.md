@@ -7,7 +7,7 @@ Follow the tutorial at [Learning Robotics with ROS made easy](https://medium.com
 
 Follow the complete guide at [Learning Robotics with ROS made easy](https://medium.com/@brjapon/learning-robotics-with-ros-made-easy-304bde0a9dfc).
 
-Include ROS package [teleop_tools](https://github.com/ros-teleop/teleop_tools) for teleoperating the robot.
+(*This package `key_teleop` is already included in this bundle of GoPiGo3, no need to install separately*) Include ROS package [teleop_tools](https://github.com/ros-teleop/teleop_tools) for teleoperating the robot.
 Whenever you want to control the robot in Gazebo or the physical GoPiGo3, launch the node as follows:
 
 - `$ rosrun key_teleop key_teleop.py /key_vel:=/cmd_vel`
