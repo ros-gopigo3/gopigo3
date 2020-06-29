@@ -1,7 +1,15 @@
-Follow the tutorial at [Learning Robotics with ROS made easy](https://medium.com/@brjapon/learning-robotics-with-ros-made-easy-304bde0a9dfc), where each of the ROS packages is covering in a dedicated section:
+This repository contains the basic packages to control GoPiGo3 with ROS:
 1. **Robot model**    => gopigo3_description
 2. **Fake robot**     => gopigo3_fake
 3. **Physical robot** => gopigo3_bringup
+
+## Tutorial
+[Learning Robotics with ROS made easy](https://medium.com/@brjapon/learning-robotics-with-ros-made-easy-304bde0a9dfc)
+Each of the ROS packages is covering in a dedicated section.
+
+## Further resources
+ - http://therobotacademy.com/
+ - http://wiki.ros.org/Robots/gopigo3
 
 # Installation
 
