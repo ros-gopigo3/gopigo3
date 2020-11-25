@@ -11,34 +11,34 @@
 
 <!-- Left wheel mechanical properties -->
   <gazebo reference="wheel_left_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+    <mu1>0.5</mu1>
+    <mu2>0.5</mu2>
     <kp>500000.0</kp>
     <kd>10.0</kd>
     <minDepth>0.001</minDepth>
-    <maxVel>0.1</maxVel>
+    <maxVel>0.5</maxVel>
     <fdir1>1 0 0</fdir1>
     <material>Gazebo/FlatBlack</material>
   </gazebo>
 <!-- Right wheel mechanical properties -->
   <gazebo reference="wheel_right_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+    <mu1>0.5</mu1>
+    <mu2>0.5</mu2>
     <kp>500000.0</kp>
     <kd>10.0</kd>
     <minDepth>0.001</minDepth>
-    <maxVel>0.1</maxVel>
+    <maxVel>0.5</maxVel>
     <fdir1>1 0 0</fdir1>
     <material>Gazebo/FlatBlack</material>
   </gazebo>
 <!-- Caster back mechanical properties -->
   <gazebo reference="caster_back_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
+    <mu1>0.001</mu1>
+    <mu2>0.001</mu2>
     <kp>1000000.0</kp>
     <kd>100.0</kd>
     <minDepth>0.001</minDepth>
-    <maxVel>1.0</maxVel>
+    <maxVel>10.0</maxVel>
     <material>Gazebo/FlatBlack</material>
   </gazebo>
 
@@ -148,14 +148,14 @@
     <sensor type="ray" name="lds_lfcd_sensor">
       <pose>0 0 0 0 0 0</pose>
       <visualize>$(arg laser_visual)</visualize>
-      <update_rate>5</update_rate>
+      <update_rate>10</update_rate>
       <ray>
         <scan>
           <horizontal>
             <!--samples>360</samples>
             <resolution>1</resolution-->
-            <samples>720</samples>
-            <resolution>0.5</resolution>
+            <samples>500</samples>
+            <resolution>0.72</resolution>
             <min_angle>0.0</min_angle>
             <max_angle>6.28319</max_angle>
           </horizontal>
@@ -220,7 +220,7 @@
     </sensor>  
    </gazebo>
 <!-- 2D Camera controller -->
-  <gazebo reference="camera">
+  <gazebo reference="camera_rgb_frame">
     <sensor type="camera" name="camera1">
       <always_on>true</always_on>
       <visualize>$(arg camera_visual)</visualize>
@@ -242,7 +242,7 @@
         <cameraName>gopigo/camera1</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>camera</frameName>
+        <frameName>camera_rgb_frame</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
